@@ -7,6 +7,8 @@
 
 # Backend C# developer project
 
+
+
 ## Background
 
 We as a vacation rental software provide a solution for the vacation rental hosts to create their rentals and assign received bookings to them. We have to control the current rental availability to avoid overbookings. Term `rental` refers to anything that could be rented: house, flat, room, bed in room etc. We allow to define how many number of units in this rental type is available for rental, it is represented by `unit`. For example we can have a rental with 2 units, and this rental represents a room - it means that the host is renting out 2 rooms.
