@@ -1,11 +1,17 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.28803.352
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31919.166
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VacationRental.Api", "VacationRental.Api\VacationRental.Api.csproj", "{478C6CBF-6F84-4604-8E31-DEDFDFE10DBC}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VacationRental.Api.Tests", "VacationRental.Api.Tests\VacationRental.Api.Tests.csproj", "{57FE6E13-7144-459F-BCA8-431087D3DAEE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VacationRental.Application", "VacationRental.Application\VacationRental.Application.csproj", "{5E30856A-7FE1-43B7-AEFC-B08091433878}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VacationRental.Domain", "VacationRental.Domain\VacationRental.Domain.csproj", "{51BA8ED2-C360-411C-900F-DFAE18EE9C15}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VacationRental.Infrastructure", "VacationRental.Infrastructure\VacationRental.Infrastructure.csproj", "{1F8F0354-1F29-41BB-96C8-3926C92016AB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +27,18 @@ Global
 		{57FE6E13-7144-459F-BCA8-431087D3DAEE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{57FE6E13-7144-459F-BCA8-431087D3DAEE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{57FE6E13-7144-459F-BCA8-431087D3DAEE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5E30856A-7FE1-43B7-AEFC-B08091433878}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5E30856A-7FE1-43B7-AEFC-B08091433878}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5E30856A-7FE1-43B7-AEFC-B08091433878}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5E30856A-7FE1-43B7-AEFC-B08091433878}.Release|Any CPU.Build.0 = Release|Any CPU
+		{51BA8ED2-C360-411C-900F-DFAE18EE9C15}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{51BA8ED2-C360-411C-900F-DFAE18EE9C15}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{51BA8ED2-C360-411C-900F-DFAE18EE9C15}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{51BA8ED2-C360-411C-900F-DFAE18EE9C15}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1F8F0354-1F29-41BB-96C8-3926C92016AB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1F8F0354-1F29-41BB-96C8-3926C92016AB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1F8F0354-1F29-41BB-96C8-3926C92016AB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1F8F0354-1F29-41BB-96C8-3926C92016AB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

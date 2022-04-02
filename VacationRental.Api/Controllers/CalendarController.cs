@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using VacationRental.Api.Models;
+using VacationRental.Application.Calendar.Queries;
+using VacationRental.Domain;
 
 namespace VacationRental.Api.Controllers
 {
@@ -9,20 +12,31 @@ namespace VacationRental.Api.Controllers
     [ApiController]
     public class CalendarController : ControllerBase
     {
+        private readonly IMediator _mediator;
         private readonly IDictionary<int, RentalViewModel> _rentals;
         private readonly IDictionary<int, BookingViewModel> _bookings;
 
-        public CalendarController(
+        public CalendarController(IMediator mediator,
             IDictionary<int, RentalViewModel> rentals,
             IDictionary<int, BookingViewModel> bookings)
         {
+            _mediator = mediator;
             _rentals = rentals;
             _bookings = bookings;
         }
 
         [HttpGet]
-        public CalendarViewModel Get(int rentalId, DateTime start, int nights)
+        public async Task<CalendarViewModel> Get(int rentalId, DateTime start, int nights)
         {
+            var query = new GetCalendarQuery
+            {
+                RentalId = rentalId,
+                Start = start,
+                Nights = nights
+            };
+
+            return await _mediator.Send(query);
+
             if (nights < 0)
                 throw new ApplicationException("Nights must be positive");
             if (!_rentals.ContainsKey(rentalId))
