@@ -5,58 +5,37 @@ using MediatR;
 using VacationRental.Application.Bookings.Interfaces;
 using VacationRental.Application.Rentals.Interfaces;
 using VacationRental.Domain;
+using VacationRental.Domain.Bookings;
 
 namespace VacationRental.Application.Bookings.Commands
 {
-    public class CreateBookingCommandHandler : IRequestHandler<CreateBookingCommand, ResourceIdViewModel>
+    public class CreateBookingCommandHandler : IRequestHandler<CreateBookingCommand, ResourceId>
     {
-        private readonly IRentalRepository _rentalRepository;
-        private readonly IBookingsRepository _bookingsRepository;
+        private readonly IUnitAllocatorService _rentalService;
+        private readonly IBookingRepository _bookingsRepository;
 
-        public CreateBookingCommandHandler(IRentalRepository rentalRepository, IBookingsRepository bookingsRepository)
+        public CreateBookingCommandHandler(IUnitAllocatorService rentalService, IBookingRepository bookingsRepository)
         {
-            _rentalRepository = rentalRepository;
+            _rentalService = rentalService;
             _bookingsRepository = bookingsRepository;
         }
 
-        public async Task<ResourceIdViewModel> Handle(CreateBookingCommand request, CancellationToken cancellationToken)
+        public async Task<ResourceId> Handle(CreateBookingCommand request, CancellationToken cancellationToken)
         {
             if (request.Nights <= 0)
                 throw new ApplicationException("Nights must be positive");
 
-            var rental = await _rentalRepository.GetRental(request.RentalId);
-            var bookings = _bookingsRepository.GetAll();
+            var unit = await _rentalService.AllocateFreeUnit(request.RentalId, request.Start, request.Nights);
 
-            for (var i = 0; i < request.Nights; i++)
+            var newBooking = new Booking
             {
-                var count = 0;
-                foreach (var booking in bookings.Values)
-                {
-                    if (booking.RentalId == request.RentalId
-                        && (booking.Start <= request.Start.Date && booking.Start.AddDays(booking.Nights) > request.Start.Date)
-                        || (booking.Start < request.Start.AddDays(request.Nights) && booking.Start.AddDays(booking.Nights) >= request.Start.AddDays(request.Nights))
-                        || (booking.Start > request.Start && booking.Start.AddDays(booking.Nights) < request.Start.AddDays(request.Nights)))
-                    {
-                        count++;
-                    }
-                }
-                if (count >= rental.Units)
-                    throw new ApplicationException("Not available");
-            }
-
-            var key = new ResourceIdViewModel { Id = bookings.Keys.Count + 1 };
-
-            var newBooking = new BookingViewModel
-            {
-                Id = key.Id,
                 Nights = request.Nights,
                 RentalId = request.RentalId,
-                Start = request.Start.Date
+                Start = request.Start.Date,
+                Unit = unit
             };
 
-            await _bookingsRepository.AddBooking(newBooking);
-
-            return key;
+            return await _bookingsRepository.AddBooking(newBooking);
         }
     }
 }

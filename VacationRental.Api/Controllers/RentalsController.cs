@@ -1,10 +1,12 @@
 ﻿using System.Threading.Tasks;
+using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using VacationRental.Api.Models;
+using VacationRental.Api.DTO.Requests;
+using VacationRental.Api.DTO.Responses.Rentals;
 using VacationRental.Application.Rentals.Commands;
 using VacationRental.Application.Rentals.Queries;
-using VacationRental.Domain;
+using ResourceIdResponse = VacationRental.Api.DTO.Responses.ResourceIdResponse;
 
 namespace VacationRental.Api.Controllers
 {
@@ -13,25 +15,26 @@ namespace VacationRental.Api.Controllers
     public class RentalsController : ControllerBase
     {
         private readonly IMediator _mediator;
+        private readonly IMapper _mapper;
 
-        public RentalsController(IMediator mediator)
+        public RentalsController(IMediator mediator, IMapper mapper)
         {
             _mediator = mediator;
+            _mapper = mapper;
         }
 
-        [HttpGet]
-        [Route("{rentalId:int}")]
-        public async Task<RentalViewModel> Post(int rentalId)
+        [HttpGet("{rentalId:int}")]
+        public async Task<RentalResponse> Get(int rentalId)
         {
-            var command = new GetRentalQuery { RentalId = rentalId };
-            return await _mediator.Send(command);
+            var result = await _mediator.Send(new GetRentalQuery(rentalId));
+            return _mapper.Map<RentalResponse>(result);
         }
 
         [HttpPost]
-        public async Task<ResourceIdViewModel> Post(RentalBindingModel model)
+        public async Task<ResourceIdResponse> Post(RentalRequest model)
         {
-            var command = new CreateRentalCommand { Units = model.Units };
-            return await _mediator.Send(command);
+            var result = await _mediator.Send(new CreateRentalCommand(model.Units, model.PreparationTimeInDays));
+            return _mapper.Map<ResourceIdResponse>(result);
         }
     }
 }

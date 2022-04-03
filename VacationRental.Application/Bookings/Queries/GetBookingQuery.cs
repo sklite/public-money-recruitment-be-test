@@ -1,10 +1,7 @@
 ﻿using MediatR;
-using VacationRental.Domain;
+using VacationRental.Domain.Bookings;
 
 namespace VacationRental.Application.Bookings.Queries
 {
-    public class GetBookingQuery : IRequest<BookingViewModel>
-    {
-        public int BookingId { get; set; }
-    }
+    public record GetBookingQuery(int BookingId) : IRequest<Booking>;
 }

@@ -2,20 +2,20 @@
 using System.Threading.Tasks;
 using MediatR;
 using VacationRental.Application.Bookings.Interfaces;
-using VacationRental.Domain;
+using VacationRental.Domain.Bookings;
 
 namespace VacationRental.Application.Bookings.Queries
 {
-    public class GetBookingQueryHandler: IRequestHandler<GetBookingQuery, BookingViewModel>
+    public class GetBookingQueryHandler: IRequestHandler<GetBookingQuery, Booking>
     {
-        private readonly IBookingsRepository _bookingsRepository;
+        private readonly IBookingRepository _bookingsRepository;
 
-        public GetBookingQueryHandler(IBookingsRepository bookingsRepository)
+        public GetBookingQueryHandler(IBookingRepository bookingsRepository)
         {
             _bookingsRepository = bookingsRepository;
         }
 
-        public async Task<BookingViewModel> Handle(GetBookingQuery request, CancellationToken cancellationToken)
+        public async Task<Booking> Handle(GetBookingQuery request, CancellationToken cancellationToken)
         {
             return await _bookingsRepository.GetBooking(request.BookingId);
         }

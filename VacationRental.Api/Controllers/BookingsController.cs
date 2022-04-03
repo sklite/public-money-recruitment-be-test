@@ -1,11 +1,12 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using VacationRental.Api.Models;
+using VacationRental.Api.DTO.Requests;
+using VacationRental.Api.DTO.Responses;
+using VacationRental.Api.DTO.Responses.Bookings;
 using VacationRental.Application.Bookings.Commands;
 using VacationRental.Application.Bookings.Queries;
-using VacationRental.Domain;
 
 namespace VacationRental.Api.Controllers
 {
@@ -14,35 +15,26 @@ namespace VacationRental.Api.Controllers
     public class BookingsController : ControllerBase
     {
         private readonly IMediator _mediator;
+        private readonly IMapper _mapper;
 
-        public BookingsController(IMediator mediator)
+        public BookingsController(IMediator mediator, IMapper mapper)
         {
             _mediator = mediator;
+            _mapper = mapper;
         }
 
-        [HttpGet]
-        [Route("{bookingId:int}")]
-        public async Task<BookingViewModel> Get(int bookingId, CancellationToken token)
+        [HttpGet("{bookingId:int}")]
+        public async Task<BookingResponse> Get(int bookingId)
         {
-            var getBookingQuery = new GetBookingQuery
-            {
-                BookingId = bookingId
-            };
-
-            return await _mediator.Send(getBookingQuery, token);
+            var result = await _mediator.Send(new GetBookingQuery(bookingId));
+            return _mapper.Map<BookingResponse>(result);
         }
 
         [HttpPost]
-        public async Task<ResourceIdViewModel> Post(BookingBindingModel model)
+        public async Task<ResourceIdResponse> Post(BookingRequest model)
         {
-            var createBookingCommand = new CreateBookingCommand
-            {
-                Nights = model.Nights,
-                RentalId = model.RentalId,
-                Start = model.Start
-            };
-
-            return await _mediator.Send(createBookingCommand);
+            var result = await _mediator.Send(new CreateBookingCommand(model.Nights, model.RentalId, model.Start));
+            return _mapper.Map<ResourceIdResponse>(result);
         }
     }
 }

@@ -7,10 +7,12 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
-using VacationRental.Application.Bookings.Commands;
 using VacationRental.Application.Bookings.Interfaces;
+using VacationRental.Application.Rentals.Commands;
 using VacationRental.Application.Rentals.Interfaces;
-using VacationRental.Domain;
+using VacationRental.Application.Rentals.Services;
+using VacationRental.Domain.Bookings;
+using VacationRental.Domain.Rentals;
 using VacationRental.Infrastructure;
 
 namespace VacationRental.Api
@@ -31,11 +33,13 @@ namespace VacationRental.Api
 
             services.AddSwaggerGen(opts => opts.SwaggerDoc("v1", new OpenApiInfo() { Title = "Vacation rental information", Version = "v1" }));
 
-            services.AddSingleton<IDictionary<int, RentalViewModel>>(new Dictionary<int, RentalViewModel>());
-            services.AddSingleton<IDictionary<int, BookingViewModel>>(new Dictionary<int, BookingViewModel>());
+            services.AddSingleton<IDictionary<int, Rental>>(new Dictionary<int, Rental>());
+            services.AddSingleton<IDictionary<int, Booking>>(new Dictionary<int, Booking>());
             services.AddScoped<IRentalRepository, RentalRepository>();
-            services.AddScoped<IBookingsRepository, BookingRepository>();
+            services.AddScoped<IBookingRepository, BookingRepository>();
+            services.AddScoped<IUnitAllocatorService, UnitAllocatorService>();
             services.AddMediatR(GetAppAssemblies().ToArray());
+            services.AddAutoMapper(GetAppAssemblies());
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -60,7 +64,9 @@ namespace VacationRental.Api
         static IEnumerable<Assembly> GetAppAssemblies()
         {
             yield return typeof(Startup).Assembly;
-            yield return typeof(CreateBookingCommand).Assembly;
+            yield return typeof(Rental).Assembly;
+            yield return typeof(CreateRentalCommand).Assembly;
+            yield return typeof(RentalRepository).Assembly;
         }
     }
 }

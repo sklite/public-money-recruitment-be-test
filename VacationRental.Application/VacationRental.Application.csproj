@@ -5,8 +5,9 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Folder Include="Bookings\Interfaces\" />
     <Folder Include="Calendar\Queries\" />
-    <Folder Include="Rentals\Interfaces\" />
+    <Folder Include="Extensions\" />
   </ItemGroup>
 
   <ItemGroup>

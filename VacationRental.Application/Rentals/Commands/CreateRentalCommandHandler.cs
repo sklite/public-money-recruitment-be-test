@@ -3,10 +3,11 @@ using System.Threading;
 using System.Threading.Tasks;
 using VacationRental.Application.Rentals.Interfaces;
 using VacationRental.Domain;
+using VacationRental.Domain.Rentals;
 
 namespace VacationRental.Application.Rentals.Commands
 {
-    public class CreateRentalCommandHandler : IRequestHandler<CreateRentalCommand, ResourceIdViewModel>
+    public class CreateRentalCommandHandler : IRequestHandler<CreateRentalCommand, ResourceId>
     {
         private readonly IRentalRepository _rentalRepository;
 
@@ -15,9 +16,15 @@ namespace VacationRental.Application.Rentals.Commands
             _rentalRepository = rentalRepository;
         }
 
-        public async Task<ResourceIdViewModel> Handle(CreateRentalCommand request, CancellationToken cancellationToken)
+        public async Task<ResourceId> Handle(CreateRentalCommand request, CancellationToken cancellationToken)
         {
-            return await _rentalRepository.AddRental(request.Units);
+            var newRental = new Rental
+            {
+                PreparationTimeInDays = request.PreparationTimeInDays,
+                Units = request.Units
+            };
+
+            return await _rentalRepository.AddRental(newRental);
         }
     }
 }

@@ -3,32 +3,28 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using VacationRental.Application.Rentals.Interfaces;
 using VacationRental.Domain;
+using VacationRental.Domain.Rentals;
 
 namespace VacationRental.Infrastructure
 {
     public class RentalRepository : IRentalRepository
     {
-        private readonly IDictionary<int, RentalViewModel> _rentals;
+        private readonly IDictionary<int, Rental> _rentals;
 
-        public RentalRepository(IDictionary<int, RentalViewModel> rentals)
+        public RentalRepository(IDictionary<int, Rental> rentals)
         {
             _rentals = rentals;
         }
 
-        public async Task<ResourceIdViewModel> AddRental(int units)
+        public async Task<ResourceId> AddRental(Rental rental)
         {
-            var key = new ResourceIdViewModel { Id = _rentals.Keys.Count + 1 };
+            rental.Id = _rentals.Keys.Count + 1;
+            _rentals[rental.Id] = rental;
 
-            _rentals.Add(key.Id, new RentalViewModel
-            {
-                Id = key.Id,
-                Units = units
-            });
-
-            return key;
+            return rental;
         }
 
-        public async Task<RentalViewModel> GetRental(int rentalId)
+        public async Task<Rental> GetRental(int rentalId)
         {
             if (!_rentals.ContainsKey(rentalId))
                 throw new ApplicationException("Rental not found");

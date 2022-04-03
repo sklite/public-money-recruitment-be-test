@@ -1,6 +1,6 @@
 ﻿namespace VacationRental.Domain
 {
-    public class CalendarBookingViewModel
+    public class ResourceId
     {
         public int Id { get; set; }
     }
