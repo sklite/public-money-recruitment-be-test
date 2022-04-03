@@ -1,7 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Threading.Tasks;
+using AutoMapper;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using VacationRental.Api.Models;
+using VacationRental.Api.DTO.Requests;
+using VacationRental.Api.DTO.Responses.Rentals;
+using VacationRental.Application.Rentals.Commands;
+using VacationRental.Application.Rentals.Queries;
+using ResourceIdResponse = VacationRental.Api.DTO.Responses.ResourceIdResponse;
 
 namespace VacationRental.Api.Controllers
 {
@@ -9,35 +14,27 @@ namespace VacationRental.Api.Controllers
     [ApiController]
     public class RentalsController : ControllerBase
     {
-        private readonly IDictionary<int, RentalViewModel> _rentals;
+        private readonly IMediator _mediator;
+        private readonly IMapper _mapper;
 
-        public RentalsController(IDictionary<int, RentalViewModel> rentals)
+        public RentalsController(IMediator mediator, IMapper mapper)
         {
-            _rentals = rentals;
+            _mediator = mediator;
+            _mapper = mapper;
         }
 
-        [HttpGet]
-        [Route("{rentalId:int}")]
-        public RentalViewModel Get(int rentalId)
+        [HttpGet("{rentalId:int}")]
+        public async Task<RentalResponse> Get(int rentalId)
         {
-            if (!_rentals.ContainsKey(rentalId))
-                throw new ApplicationException("Rental not found");
-
-            return _rentals[rentalId];
+            var result = await _mediator.Send(new GetRentalQuery(rentalId));
+            return _mapper.Map<RentalResponse>(result);
         }
 
         [HttpPost]
-        public ResourceIdViewModel Post(RentalBindingModel model)
+        public async Task<ResourceIdResponse> Post(RentalRequest model)
         {
-            var key = new ResourceIdViewModel { Id = _rentals.Keys.Count + 1 };
-
-            _rentals.Add(key.Id, new RentalViewModel
-            {
-                Id = key.Id,
-                Units = model.Units
-            });
-
-            return key;
+            var result = await _mediator.Send(new CreateRentalCommand(model.Units, model.PreparationTimeInDays));
+            return _mapper.Map<ResourceIdResponse>(result);
         }
     }
 }

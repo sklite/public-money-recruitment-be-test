@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace VacationRental.Api.Models
+namespace VacationRental.Api.DTO.Responses.Bookings
 {
-    public class BookingViewModel
+    public class BookingResponse
     {
         public int Id { get; set; }
         public int RentalId { get; set; }
