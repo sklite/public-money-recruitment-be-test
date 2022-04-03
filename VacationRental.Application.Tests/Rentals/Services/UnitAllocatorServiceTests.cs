@@ -42,8 +42,10 @@ namespace VacationRental.Application.Tests.Rentals.Services
             _bookingsRepo.Setup(r => r.Get(It.IsAny<Func<Booking, bool>>()))
                 .ReturnsAsync(CreateBookings().Values);
 
+
             //Act
             var result = await rentalService.AllocateFreeUnit(111, new DateTime(2000, 01, 07), 2);
+
 
             //Assert
             Assert.Equal(1, result);
@@ -58,12 +60,13 @@ namespace VacationRental.Application.Tests.Rentals.Services
             _rentalsRepo.Setup(r => r.GetRental(It.IsAny<int>()))
                 .ReturnsAsync(new Rental { Id = 111, PreparationTimeInDays = 1, Units = 2 });
 
-
             _bookingsRepo.Setup(r => r.Get(It.IsAny<Func<Booking, bool>>()))
                 .ReturnsAsync(CreateBookings().Values);
 
+
             //Act
             Task result() => rentalService.AllocateFreeUnit(111, new DateTime(2000, 01, 05), 2);
+
 
             //Assert
             var exception = await Assert.ThrowsAsync<ApplicationException>(result);

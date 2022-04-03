@@ -31,8 +31,10 @@ namespace VacationRental.Application.Tests.Rentals
                 .ReturnsAsync(repoResult)
                 .Callback((Rental rental) => callback = rental);
 
+
             //Act
             var result = await commandHandler.Handle(request, CancellationToken.None);
+
 
             //Assert
             Assert.NotNull(result);
